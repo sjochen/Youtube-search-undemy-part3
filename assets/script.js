@@ -47,7 +47,7 @@ function search() {
             key: 'AIzaSyAzZWr7dqf6HAMoZItSvMGNG38v8A3C5oM'},
             function (data) {
                 let nextPageToken = data.nextPageToken;
-                let previousPageToken = data.previousPageToken;
+                let prevPageToken = data.prevPageToken;
 
                 console.log(data);
 
@@ -58,12 +58,94 @@ function search() {
                     $('#results').append(output);
                 });
 
-                let buttons = getButtons(previousPageToken, nextPageToken);
+                let buttons = getButtons(prevPageToken, nextPageToken);
 
                 //Display Buttons
                 $('#buttons').append(buttons);
             }
     );
+}
+
+//Next page function
+function nextPage() {
+    let token = $('#next-button').data('token');
+    let q = $('#next-button').data('query')
+
+    //Clear Results
+    $('#results').html('');
+    $('#buttons').html('');
+
+    //Get Form Input
+    q = $('#query').val();
+
+    //Run GET Request on API
+    $.get(
+        "https://www.googleapis.com/youtube/v3/search",{
+            part: 'snippet, id',
+            q: q,
+            pageToken: token,
+            type:'video',
+            key: 'AIzaSyAzZWr7dqf6HAMoZItSvMGNG38v8A3C5oM'},
+            function (data) {
+                let nextPageToken = data.nextPageToken;
+                let prevPageToken = data.prevPageToken;
+
+                console.log(data);
+
+                $.each(data.items, function (i, item) {
+                    let output = getOutput(item);
+
+                    //Display Results
+                    $('#results').append(output);
+                });
+
+                let buttons = getButtons(prevPageToken, nextPageToken);
+
+                //Display Buttons
+                $('#buttons').append(buttons);
+            }
+    )
+}
+
+//Next page function
+function prevPage() {
+    let token = $('#prev-button').data('token');
+    let q = $('#prev-button').data('query')
+
+    //Clear Results
+    $('#results').html('');
+    $('#buttons').html('');
+
+    //Get Form Input
+    q = $('#query').val();
+
+    //Run GET Request on API
+    $.get(
+        "https://www.googleapis.com/youtube/v3/search",{
+            part: 'snippet, id',
+            q: q,
+            pageToken: token,
+            type:'video',
+            key: 'AIzaSyAzZWr7dqf6HAMoZItSvMGNG38v8A3C5oM'},
+            function (data) {
+                let nextPageToken = data.nextPageToken;
+                let prevPageToken = data.prevPageToken;
+
+                console.log(data);
+
+                $.each(data.items, function (i, item) {
+                    let output = getOutput(item);
+
+                    //Display Results
+                    $('#results').append(output);
+                });
+
+                let buttons = getButtons(prevPageToken, nextPageToken);
+
+                //Display Buttons
+                $('#buttons').append(buttons);
+            }
+    )
 }
 
 //Build Output
@@ -94,17 +176,16 @@ function getOutput(item) {
 
 //Build the buttons
 function getButtons(prevPageToken, nextPageToken) {
-let btnoutput = '';
 
     if(!prevPageToken){
-        btnoutput = '<div class="button-container">' +
+        var btnoutput = '<div class="button-container">' +
         '<button id="next-button" class="paging-button" data-token="' + nextPageToken +'" data-query="'+ q + '"' +
         'onclick="nextPage();">Next Page</button></div>';
         
     }else{
-        btnoutput = '<div class="button-container">' +
-        '<button id="next-button" class="paging-button" data-token="' + prevPageToken +'" data-query="'+ q + '"' +
-        'onclick="prevPagePage();">Previous Page</button>' + 
+        var btnoutput = '<div class="button-container">' +
+        '<button id="prev-button" class="paging-button" data-token="' + prevPageToken +'" data-query="'+ q + '"' +
+        'onclick="prevPage();">Previous Page</button>' + 
         '<button id="next-button" class="paging-button" data-token="' + nextPageToken +'" data-query="'+ q + '"' +
         'onclick="nextPage();">Next Page</button></div>';
         
