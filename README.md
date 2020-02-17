@@ -12,4 +12,4 @@ Google recently updated its cookie sharing policy so it stops fancybox from opre
 I would also like to put in a database so users can save their favorite videos and add notes which can be referenced at a later date.
 
 ### Deployed
-Link: 
+Link: https://sjochen.github.io/Youtube-search-undemy-part3/
